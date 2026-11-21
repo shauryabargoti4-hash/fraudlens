@@ -1,0 +1,30 @@
+# Core Backend
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+sqlalchemy>=2.0.30
+python-dotenv>=1.0.1
+httpx>=0.27.0
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+python-multipart>=0.0.9
+
+# Document Processing & OCR (To be utilized in Level 2+)
+pymupdf>=1.24.0
+pdfplumber>=0.11.0
+pillow>=10.4.0
+pytesseract>=0.3.10
+
+# Vector DB & Embeddings (To be utilized in Level 3+)
+chromadb>=0.5.0
+
+# LLM & Agent Framework (To be utilized in Level 4-5)
+langgraph>=0.2.0
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-google-genai>=1.0.8
+google-genai>=0.1.0
+
+# Frontend UI (To be utilized in Level 6)
+streamlit>=1.38.0

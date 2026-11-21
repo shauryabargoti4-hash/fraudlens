@@ -1,0 +1,113 @@
+{
+  "dataset_version": "1.0.0",
+  "policy_number": "POL-SHIELD-2026-8801",
+  "claim_number": "CLM-2026-8801",
+  "total_claimed_amount": 9570.0,
+  "scenarios": [
+    {
+      "scenario_id": "SCENARIO_A",
+      "name": "Valid Reimbursable Items",
+      "status": "APPROVED",
+      "items": [
+        {
+          "description": "Orthopedic Diagnostic X-Ray Series",
+          "amount": 850.0,
+          "applicable_clause": "Section 1.1",
+          "ruling": "Eligible diagnostic expense covered under primary hospitalization scope."
+        },
+        {
+          "description": "Prescribed Post-Op Antibiotics & Analgesics",
+          "amount": 620.0,
+          "applicable_clause": "Section 1.1",
+          "ruling": "Standard pharmacy medications prescribed for acute trauma."
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO_B",
+      "name": "Waiting Period / Timeline Mismatch",
+      "status": "VIOLATION",
+      "items": [
+        {
+          "description": "Incident occurred 14 days after policy inception",
+          "policy_effective_date": "2026-02-01",
+          "incident_date": "2026-02-15",
+          "treatment_window": "2026-02-15 to 2026-02-19",
+          "applicable_clause": "Section 3.1 Initial Inception Waiting Period",
+          "ruling": "Policy mandates 30-day initial waiting period from 2026-02-01 to 2026-03-02. Claimed incident occurred on day 14.",
+          "discrepancy_type": "waiting_period_violation",
+          "severity": "high"
+        },
+        {
+          "description": "Pre-existing Joint Chronic Therapy",
+          "amount": 1400.0,
+          "applicable_clause": "Section 3.2 Pre-Existing Conditions",
+          "ruling": "Subject to 24-month waiting period for chronic conditions; policy active for only 2 weeks.",
+          "discrepancy_type": "waiting_period_violation",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO_C",
+      "name": "Excluded Item and Sub-Limit Breach",
+      "status": "VIOLATION",
+      "items": [
+        {
+          "description": "Elective Cosmetic Rhinoplasty",
+          "amount": 3200.0,
+          "applicable_clause": "Section 4.1 Cosmetic and Aesthetic Surgeries",
+          "ruling": "Strictly excluded. Rhinoplasty is elective aesthetic surgery not covered under policy.",
+          "discrepancy_type": "clause_exclusion",
+          "severity": "critical"
+        },
+        {
+          "description": "Inpatient Room Rent Sub-Limit Breach",
+          "amount_claimed": 2400.0,
+          "days": 4,
+          "rate_charged": 600.0,
+          "sub_limit_rate": 500.0,
+          "excess_amount": 400.0,
+          "applicable_clause": "Section 2.1 Room and Board Sub-Limit",
+          "ruling": "Room rent is capped at $500/day. $100/day excess ($400 total) must be disallowed.",
+          "discrepancy_type": "sub_limit_breach",
+          "severity": "medium"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO_D",
+      "name": "Missing Required Documentation",
+      "status": "MISSING_MANDATORY_DOC",
+      "items": [
+        {
+          "missing_document": "Detailed Physician Discharge Summary",
+          "applicable_clause": "Section 6.1(b) Required Substantiating Proof",
+          "ruling": "Policy Section 6.1(b) explicitly mandates a Detailed Physician Discharge Summary. Only clinical memorandum provided; discharge summary is missing.",
+          "discrepancy_type": "missing_document",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "scenario_id": "SCENARIO_E",
+      "name": "Policy Loophole / Ambiguity Exploitation",
+      "status": "AMBIGUOUS_LOOPHOLE",
+      "items": [
+        {
+          "description": "Adjunctive Holistic Aromatherapy & Crystal Wellness",
+          "amount": 1100.0,
+          "applicable_clause": "Clause 9.3 Alternative Therapy Discretion",
+          "ruling": "Clause 9.3 allows discretionary comfort care without fee schedule or pharmacological proof. Claimant exploits vague wording to bill $1,100 for non-standard crystal therapy.",
+          "discrepancy_type": "loophole_exploit",
+          "severity": "medium"
+        }
+      ]
+    }
+  ],
+  "expected_audit_recommendation": "MANUAL_INVESTIGATION",
+  "expected_risk_score_range": [
+    75.0,
+    95.0
+  ]
+}
