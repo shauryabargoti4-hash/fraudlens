@@ -995,3 +995,120 @@
 2026-11-21 13:56:12 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
 2026-11-21 13:56:12 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
 2026-11-21 13:56:12 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:13 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:13 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:13 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:13 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:13 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:13 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:13 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:13 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:13 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:13 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:18 | WARNING  | clauseguard:generate_text:146 - Primary model 'gemini-1.5-pro' invocation failed: 429 Resource Exhausted: Model is overloaded.
+2026-11-21 14:32:18 | INFO     | clauseguard:generate_text:158 - Attempting fallback model 'gemini-1.5-flash'...
+2026-11-21 14:32:18 | WARNING  | clauseguard:generate_text:146 - Primary model 'gemini-1.5-pro' invocation failed: Invalid authentication credentials
+2026-11-21 14:32:19 | WARNING  | clauseguard:generate_text:146 - Primary model 'gemini-1.5-pro' invocation failed: 503 Service Unavailable
+2026-11-21 14:32:19 | INFO     | clauseguard:generate_text:158 - Attempting fallback model 'gemini-1.5-flash'...
+2026-11-21 14:32:19 | ERROR    | clauseguard:generate_text:173 - Fallback model 'gemini-1.5-flash' also failed: 503 Service Unavailable
+2026-11-21 14:32:20 | ERROR    | clauseguard:generate_structured:261 - Failed to validate response against schema SampleClaimExtraction: 1 validation error for SampleClaimExtraction
+  Invalid JSON: key must be a string at line 1 column 34 [type=json_invalid, input_value='{"claimant_name": "David Vance", INVALID_JSON...', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.14/v/json_invalid
+2026-11-21 14:32:20 | WARNING  | clauseguard:extract_from_pdf:114 - OCR fallback error on page 1 of ocr_crash.pdf: OCR crash
+2026-11-21 14:32:20 | ERROR    | clauseguard:extract_from_pdf:75 - Failed to open PDF 'corrupt.pdf': Failed to open stream
+2026-11-21 14:32:22 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 3 chunks into ChromaDB 'sync_seven'
+2026-11-21 14:32:22 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 3 chunks into ChromaDB 'sync_seven'
+2026-11-21 14:32:22 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 1 chunks into ChromaDB 'sync_seven'
+2026-11-21 14:32:22 | INFO     | clauseguard:synchronize_chunks_to_vector_store:106 - ChromaDB synchronization complete: 7/7 chunks indexed into 'sync_seven' (skipped=0, failed=0)
+2026-11-21 14:32:22 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'sync_idempotent'
+2026-11-21 14:32:22 | INFO     | clauseguard:synchronize_chunks_to_vector_store:106 - ChromaDB synchronization complete: 4/4 chunks indexed into 'sync_idempotent' (skipped=0, failed=0)
+2026-11-21 14:32:22 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'sync_idempotent'
+2026-11-21 14:32:22 | INFO     | clauseguard:synchronize_chunks_to_vector_store:106 - ChromaDB synchronization complete: 4/4 chunks indexed into 'sync_idempotent' (skipped=0, failed=0)
+2026-11-21 14:32:22 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 1 chunks into ChromaDB 'sync_skipped'
+2026-11-21 14:32:22 | INFO     | clauseguard:synchronize_chunks_to_vector_store:106 - ChromaDB synchronization complete: 1/2 chunks indexed into 'sync_skipped' (skipped=1, failed=0)
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:upload_document:174 - Successfully ingested 'claim_invoice.pdf': 1 pages, 2 chunks, OCR=False
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:upload_document:174 - Successfully ingested 'policy_terms.txt': 1 pages, 2 chunks, OCR=False
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:upload_document:174 - Successfully ingested 'receipt.png': 1 pages, 1 chunks, OCR=True
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:23 | ERROR    | clauseguard:extract_from_pdf:75 - Failed to open PDF 'bad.pdf': Failed to open stream
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:23 | INFO     | clauseguard:upload_document:174 - Successfully ingested 'passwd.pdf': 1 pages, 1 chunks, OCR=False
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: testing]
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-21 14:32:23 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-21 14:32:23 | INFO     | clauseguard:upload_document:174 - Successfully ingested 'apex_shield_policy.pdf': 2 pages, 23 chunks, OCR=False
+2026-11-21 14:32:23 | INFO     | clauseguard:upload_document:174 - Successfully ingested 'st_jude_medical_invoice.pdf': 1 pages, 8 chunks, OCR=False
+2026-11-21 14:32:23 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-21 14:32:23 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:23 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:23 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:23 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:23 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:24 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:24 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:24 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
+2026-11-21 14:32:24 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 4 chunks into ChromaDB 'test_collection'
