@@ -1,8 +1,10 @@
 import math
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from backend.core.database import get_db
+from backend.core.logging_config import logger
 from backend.crud.policy import get_policy as crud_get_policy
 from backend.crud.claim import (
     create_claim as crud_create_claim,
@@ -14,6 +16,8 @@ from backend.crud.claim import (
     add_document_to_claim as crud_add_document,
     add_finding_to_claim as crud_add_finding,
 )
+from backend.models.enums import AdvisoryVerdict
+from backend.models.report import AnalysisReport
 from backend.schemas.claim import (
     ClaimCreate,
     ClaimUpdate,
@@ -23,8 +27,27 @@ from backend.schemas.claim import (
 )
 from backend.schemas.finding import FindingCreate, FindingResponse
 from backend.schemas.common import PaginatedResponse, MessageResponse
+from backend.schemas.reporting import (
+    BatchClaimAuditRequest,
+    BatchClaimAuditResponse,
+    BatchClaimItemResult,
+)
+from backend.services.audit_report_service import ComprehensiveAnalysisReport
+from backend.services.analyzer_calculator import CalculationSummary
+from backend.services.llm_provider import BaseLLMProvider, get_llm_provider
+from backend.services.vector_store import VectorStore, get_vector_store
 
 router = APIRouter()
+
+
+def get_llm_provider_dep() -> BaseLLMProvider:
+    """Dependency provider for LLM provider."""
+    return get_llm_provider()
+
+
+def get_vector_store_dep() -> VectorStore:
+    """Dependency provider for Vector Store."""
+    return get_vector_store()
 
 
 @router.post("/", response_model=ClaimResponse, status_code=status.HTTP_201_CREATED, summary="Create a new claim")
@@ -154,3 +177,206 @@ def add_finding(
             detail=f"Claim with ID {claim_id} not found.",
         )
     return crud_add_finding(db, finding_in=finding_in)
+
+
+@router.post(
+    "/{claim_id}/analyze",
+    response_model=ComprehensiveAnalysisReport,
+    status_code=status.HTTP_200_OK,
+    summary="Trigger end-to-end AI claim analysis pipeline",
+)
+def trigger_claim_analysis(
+    claim_id: int,
+    db: Session = Depends(get_db),
+    llm_provider: BaseLLMProvider = Depends(get_llm_provider_dep),
+    vector_store: VectorStore = Depends(get_vector_store_dep),
+) -> ComprehensiveAnalysisReport:
+    """Executes the complete ClauseGuard LangGraph sequential analysis workflow on a claim."""
+    claim = crud_get_claim(db, claim_id=claim_id)
+    if not claim:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Claim with ID {claim_id} not found.",
+        )
+
+    policy = crud_get_policy(db, policy_id=claim.policy_id)
+    if not policy:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Parent Policy with ID {claim.policy_id} not found.",
+        )
+
+    try:
+        from backend.workflows.claim_analysis_workflow import run_claim_analysis
+        report = run_claim_analysis(
+            claim_id=claim_id,
+            db=db,
+            llm_provider=llm_provider,
+            vector_store=vector_store,
+        )
+        return report
+    except Exception as exc:
+        logger.error(f"Claim analysis pipeline execution failed for Claim {claim_id}: {exc}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Claim analysis pipeline execution failed: {str(exc)}",
+        )
+
+
+@router.get(
+    "/{claim_id}/analysis",
+    response_model=ComprehensiveAnalysisReport,
+    summary="Retrieve the latest analysis report for a claim",
+)
+def get_claim_analysis(
+    claim_id: int,
+    db: Session = Depends(get_db),
+) -> ComprehensiveAnalysisReport:
+    """Retrieve the most recently generated analysis report for a claim."""
+    claim = crud_get_claim(db, claim_id=claim_id)
+    if not claim:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Claim with ID {claim_id} not found.",
+        )
+
+    stmt = (
+        select(AnalysisReport)
+        .where(AnalysisReport.claim_id == claim_id)
+        .order_by(AnalysisReport.created_at.desc())
+    )
+    db_report = db.scalars(stmt).first()
+    if not db_report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No analysis report found for Claim {claim_id}.",
+        )
+
+    trace = db_report.agent_trace or {}
+    verdict_str = trace.get("verdict", "REVIEW_REQUIRED")
+    verdict = AdvisoryVerdict(verdict_str) if verdict_str in [v.value for v in AdvisoryVerdict] else AdvisoryVerdict.REVIEW_REQUIRED
+
+    calcs = CalculationSummary(
+        claimed_amount=claim.claimed_amount,
+        total_billed_amount=claim.claimed_amount,
+        net_eligible_amount=claim.claimed_amount,
+        calculation_steps=trace.get("calculation_steps", []),
+    )
+
+    policy = crud_get_policy(db, policy_id=claim.policy_id)
+    policy_number = policy.policy_number if policy else "N/A"
+
+    return ComprehensiveAnalysisReport(
+        report_id=db_report.id,
+        claim_id=claim_id,
+        policy_id=claim.policy_id,
+        claimant_name=claim.claimant_name,
+        policy_number=policy_number,
+        verdict=verdict,
+        recommendation=db_report.recommendation,
+        overall_risk_score=db_report.overall_risk_score,
+        confidence_score=db_report.confidence_score,
+        executive_summary=db_report.executive_summary,
+        findings_count=db_report.findings_count,
+        top_reasons=trace.get("top_reasons", []),
+        conditions_to_change_verdict=trace.get("conditions_to_change_verdict", []),
+        missing_documents=trace.get("missing_documents", []),
+        unresolved_issues=trace.get("unresolved_issues", []),
+        approved_clause_refs=trace.get("approved_clause_refs", []),
+        calculations=calcs,
+        human_review_required=verdict != AdvisoryVerdict.TAKE,
+        fallback_used=trace.get("fallback_used", False),
+        fallback_reason=trace.get("fallback_reason"),
+        agent_trace=trace,
+    )
+
+
+@router.post(
+    "/batch-audit",
+    response_model=BatchClaimAuditResponse,
+    summary="Batch Portfolio Claim Audit with Error Isolation",
+)
+def batch_audit_claims(
+    payload: BatchClaimAuditRequest,
+    db: Session = Depends(get_db),
+    llm_provider: BaseLLMProvider = Depends(get_llm_provider_dep),
+    vector_store: VectorStore = Depends(get_vector_store_dep),
+) -> BatchClaimAuditResponse:
+    """Executes the LangGraph analysis pipeline across multiple claims with strict error isolation."""
+    from backend.workflows.claim_analysis_workflow import run_claim_analysis
+
+    # 1. Determine Target Claim IDs
+    target_ids = []
+    if payload.claim_ids:
+        target_ids = payload.claim_ids
+    elif payload.policy_id:
+        policy_claims = db.query(Claim.id).filter(Claim.policy_id == payload.policy_id).all()
+        target_ids = [c[0] for c in policy_claims]
+    else:
+        # Default to all claims up to 50
+        all_claims = db.query(Claim.id).limit(50).all()
+        target_ids = [c[0] for c in all_claims]
+
+    results: list[BatchClaimItemResult] = []
+    verdict_counts: dict[str, int] = {}
+    successful_count = 0
+    failed_count = 0
+
+    for cid in target_ids:
+        claim_obj = crud_get_claim(db, claim_id=cid)
+        claim_num = claim_obj.claim_number if claim_obj else f"ID-{cid}"
+
+        if not claim_obj:
+            failed_count += 1
+            results.append(
+                BatchClaimItemResult(
+                    claim_id=cid,
+                    claim_number=claim_num,
+                    status="error",
+                    error_message=f"Claim ID {cid} not found in database.",
+                )
+            )
+            continue
+
+        # Execute with complete error isolation per claim
+        try:
+            report = run_claim_analysis(
+                claim_id=cid,
+                db=db,
+                llm_provider=llm_provider,
+                vector_store=vector_store,
+            )
+            verdict_val = report.verdict.value if hasattr(report.verdict, "value") else str(report.verdict)
+            verdict_counts[verdict_val] = verdict_counts.get(verdict_val, 0) + 1
+            successful_count += 1
+
+            results.append(
+                BatchClaimItemResult(
+                    claim_id=cid,
+                    claim_number=claim_num,
+                    status="success",
+                    verdict=verdict_val,
+                    risk_score=report.overall_risk_score,
+                    report_id=report.report_id,
+                )
+            )
+        except Exception as e:
+            logger.exception(f"Batch audit failed on Claim {cid}: {e}")
+            failed_count += 1
+            results.append(
+                BatchClaimItemResult(
+                    claim_id=cid,
+                    claim_number=claim_num,
+                    status="error",
+                    error_message=str(e),
+                )
+            )
+
+    return BatchClaimAuditResponse(
+        total_claims=len(target_ids),
+        processed_count=len(results),
+        successful_count=successful_count,
+        failed_count=failed_count,
+        verdict_counts=verdict_counts,
+        results=results,
+    )

@@ -1,0 +1,29 @@
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache & compiled bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment files with secrets
+.env
+.env.local
+
+# Git & IDE metadata
+.git/
+.gitignore
+.idea/
+.vscode/
+
+# Local build artifacts
+dist/
+build/
+*.egg-info/

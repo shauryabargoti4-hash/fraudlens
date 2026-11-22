@@ -62,3 +62,28 @@ class RecommendationType(str, Enum):
     REJECT = "reject"
     MANUAL_INVESTIGATION = "manual_investigation"
     REQUEST_INFORMATION = "request_information"
+    # Wave 3 advisory decision outcomes
+    TAKE = "take"
+    REVIEW_REQUIRED = "review_required"
+    DO_NOT_TAKE = "do_not_take"
+
+
+class AdvisoryVerdict(str, Enum):
+    """Advisory claim review recommendations from the deterministic recommendation gate."""
+    TAKE = "TAKE"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
+    DO_NOT_TAKE = "DO_NOT_TAKE"
+
+
+class ReviewerOutcome(str, Enum):
+    """Clause applicability status determined by the Reviewer node."""
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    UNCERTAIN = "uncertain"
+    NEEDS_MORE_EVIDENCE = "needs_more_evidence"
+
+
+class UserRole(str, Enum):
+    """Role-based access control roles for claim auditors and adjudicators."""
+    AUDITOR = "AUDITOR"
+    SENIOR_ADJUDICATOR = "SENIOR_ADJUDICATOR"

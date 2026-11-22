@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  # ============================================================================
+  # ClauseGuard FastAPI Backend Service
+  # ============================================================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: clauseguard-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persistent storage volume for SQLite DB, ChromaDB vector store, and document uploads
+      - ./storage:/app/storage
+    environment:
+      - APP_NAME=ClauseGuard
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - API_V1_PREFIX=/api/v1
+      - DATABASE_URL=sqlite:///./storage/clauseguard.db
+      - STORAGE_DIR=./storage
+      - UPLOAD_DIR=./storage/uploads
+      - CHROMA_DIR=./storage/chroma_db
+      - CHROMA_COLLECTION_NAME=clauseguard_policies
+      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - EMBEDDING_PROVIDER=${EMBEDDING_PROVIDER:-mock}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - clauseguard-net
+
+  # ============================================================================
+  # ClauseGuard Streamlit Frontend Dashboard Service
+  # ============================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: clauseguard-frontend
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      # Communicates with backend using internal Docker bridge network
+      - CLAUSEGUARD_API_URL=http://backend:8000/api/v1
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - clauseguard-net
+
+networks:
+  clauseguard-net:
+    driver: bridge

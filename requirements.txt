@@ -28,3 +28,6 @@ google-genai>=0.1.0
 
 # Frontend UI (To be utilized in Level 6)
 streamlit>=1.38.0
+
+# Reporting & PDF Export (Wave 5)
+reportlab>=4.2.0

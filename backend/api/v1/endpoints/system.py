@@ -6,8 +6,11 @@ from backend import __version__
 from backend.core.config import get_settings, Settings
 from backend.core.database import get_db
 from backend.models.policy import Policy
-from backend.models.claim import Claim
+from backend.models.claim import Claim, ClaimDocument
 from backend.models.finding import DiscrepancyFinding
+from backend.models.report import AnalysisReport, AuditLog
+from backend.models.document_chunk import DocumentChunk
+from backend.models.enums import ClaimStatus
 from backend.schemas.system import HealthCheckResponse, SystemStatusResponse, ComponentStatus
 
 router = APIRouter()
@@ -103,3 +106,66 @@ def get_system_status(
             "findings": finding_count,
         },
     )
+
+
+@router.post("/system/reset-demo", summary="Reset Exhibition Demo State")
+def reset_demo_state(
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+):
+    """Safely resets demo test state back to baseline sample state without corrupting ChromaDB or SQLite."""
+    try:
+        # 1. Clean up temporary test claims created during live exhibition demos (claim_id > 1)
+        test_claims = db.query(Claim).filter(Claim.id > 1).all()
+        for tc in test_claims:
+            db.query(AnalysisReport).filter(AnalysisReport.claim_id == tc.id).delete()
+            db.query(DiscrepancyFinding).filter(DiscrepancyFinding.claim_id == tc.id).delete()
+            db.query(ClaimDocument).filter(ClaimDocument.claim_id == tc.id).delete()
+            db.query(DocumentChunk).filter(DocumentChunk.claim_id == tc.id).delete()
+            db.delete(tc)
+
+        # 2. Reset Claim 1 back to clean baseline state
+        claim1 = db.query(Claim).filter(Claim.id == 1).first()
+        if claim1:
+            claim1.status = ClaimStatus.SUBMITTED
+            # Ensure file_paths are verified portable relative paths
+            docs = db.query(ClaimDocument).filter(ClaimDocument.claim_id == 1).all()
+            for d in docs:
+                if d.id == 1:
+                    d.file_path = "sample_data/claims/claim_form_clm_8801.pdf"
+                elif d.id == 2:
+                    d.file_path = "sample_data/invoices/st_jude_medical_invoice.pdf"
+                elif d.id == 3:
+                    d.file_path = "sample_data/evidence/physician_notes.txt"
+
+        # 3. Ensure Policy 1 has clean portable document path
+        pol1 = db.query(Policy).filter(Policy.id == 1).first()
+        if pol1:
+            pol1.document_path = "sample_data/policies/apex_shield_policy.pdf"
+
+        # 4. Record immutable audit log entry
+        reset_log = AuditLog(
+            entity_type="system",
+            entity_id="demo",
+            action="demo_reset",
+            details="Exhibition demo state safely reset to pristine baseline.",
+        )
+        db.add(reset_log)
+        db.commit()
+
+        return {
+            "success": True,
+            "message": "Demo state reset to clean baseline successfully.",
+            "stats": {
+                "policies": db.query(Policy).count(),
+                "claims": db.query(Claim).count(),
+                "document_chunks": db.query(DocumentChunk).count(),
+            },
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to reset demo state: {str(e)}",
+        )
+

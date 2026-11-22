@@ -32,6 +32,34 @@ from backend.services.sync_service import (
     SynchronizationReport,
     synchronize_chunks_to_vector_store,
 )
+from backend.services.policy_rule_extractor import (
+    PolicyRuleExtractor,
+    ExtractedPolicyRule,
+)
+from backend.services.claim_retrieval_service import (
+    ClaimRetrievalService,
+    ClaimEvidencePackage,
+)
+from backend.services.clause_reviewer import (
+    ClauseReviewer,
+    ReviewerSummary,
+    ClauseReviewAssessment,
+)
+from backend.services.analyzer_calculator import (
+    AnalyzerCalculator,
+    AnalysisCalculationResult,
+    CalculationSummary,
+    DiscrepancyItem,
+    PolicyLoopholeItem,
+)
+from backend.services.recommendation_gate import (
+    DeterministicRecommendationGate,
+    RecommendationVerdict,
+)
+from backend.services.audit_report_service import (
+    AuditReportService,
+    ComprehensiveAnalysisReport,
+)
 
 __all__ = [
     "PageExtractionRecord",
@@ -57,4 +85,20 @@ __all__ = [
     "get_vector_store",
     "SynchronizationReport",
     "synchronize_chunks_to_vector_store",
+    "PolicyRuleExtractor",
+    "ExtractedPolicyRule",
+    "ClaimRetrievalService",
+    "ClaimEvidencePackage",
+    "ClauseReviewer",
+    "ReviewerSummary",
+    "ClauseReviewAssessment",
+    "AnalyzerCalculator",
+    "AnalysisCalculationResult",
+    "CalculationSummary",
+    "DiscrepancyItem",
+    "PolicyLoopholeItem",
+    "DeterministicRecommendationGate",
+    "RecommendationVerdict",
+    "AuditReportService",
+    "ComprehensiveAnalysisReport",
 ]

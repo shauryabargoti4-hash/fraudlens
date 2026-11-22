@@ -46,4 +46,41 @@ class DocumentUploadResponse(BaseSchema):
     page_count: int
     ocr_applied: bool
     total_chunks: int
+    indexed_in_vector_store: bool = Field(True, description="Whether chunks were successfully upserted into ChromaDB")
+    indexing_error: Optional[str] = Field(None, description="Error message if vector indexing failed")
     chunks: List[DocumentChunkResponse] = Field(default_factory=list)
+
+
+class DocumentSearchRequest(BaseSchema):
+    """Query and filter payload for semantic chunk retrieval."""
+
+    query: str = Field(..., min_length=1, description="Semantic search query string")
+    top_k: int = Field(5, ge=1, le=50, description="Maximum number of chunks to return")
+    policy_id: Optional[int] = Field(None, description="Optional policy ID filter")
+    claim_id: Optional[int] = Field(None, description="Optional claim ID filter")
+    document_type: Optional[str] = Field(None, description="Optional document type filter")
+
+
+class DocumentSearchResultItem(BaseSchema):
+    """Normalized search result returned by semantic search endpoint."""
+
+    chunk_id: int
+    document_id: Optional[int] = None
+    text: str
+    policy_id: Optional[int] = None
+    claim_id: Optional[int] = None
+    document_type: str = "other"
+    clause_or_section_ref: Optional[str] = None
+    page_number: int = 1
+    chunk_index: int = 0
+    similarity_score: Optional[float] = None
+    distance: Optional[float] = None
+    metadata: dict = Field(default_factory=dict)
+
+
+class DocumentSearchResponse(BaseSchema):
+    """Response containing retrieved semantic chunks and search metadata."""
+
+    query: str
+    total_results: int
+    results: List[DocumentSearchResultItem] = Field(default_factory=list)

@@ -23,11 +23,20 @@ from backend.schemas.document_chunk import (
     DocumentChunkListResponse,
     DocumentChunkResponse,
     DocumentUploadResponse,
+    DocumentSearchRequest,
+    DocumentSearchResultItem,
+    DocumentSearchResponse,
 )
 from backend.services.clause_chunker import chunk_document
 from backend.services.pdf_parser import extract_document
+from backend.services.vector_store import VectorStore, get_vector_store
 
 router = APIRouter()
+
+
+def get_vector_store_dep() -> VectorStore:
+    """Dependency provider for ChromaDB vector store."""
+    return get_vector_store()
 
 
 def sanitize_filename(filename: str) -> str:
@@ -51,6 +60,7 @@ async def upload_document(
     claim_id: Optional[int] = Form(None, description="Optional associated Claim ID"),
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
+    vector_store: VectorStore = Depends(get_vector_store_dep),
 ) -> DocumentUploadResponse:
     """Multipart upload pipeline: validates file, stores securely, extracts text/OCR, chunks content, and persists."""
     # 1. Require at least one association
@@ -171,9 +181,22 @@ async def upload_document(
         db_chunks = create_chunks_batch(db, chunks_in=chunk_dtos)
         db.commit()
 
+        # 10. Automatically index chunks in ChromaDB Vector Store
+        indexed_in_vector_store = True
+        indexing_error = None
+        try:
+            vector_store.upsert_chunks(db_chunks)
+            logger.info(
+                f"Successfully auto-indexed {len(db_chunks)} chunks for '{clean_name}' into ChromaDB"
+            )
+        except Exception as vs_err:
+            indexed_in_vector_store = False
+            indexing_error = str(vs_err)
+            logger.error(f"Failed to auto-index chunks in ChromaDB for '{clean_name}': {vs_err}")
+
         logger.info(
             f"Successfully ingested '{clean_name}': {extraction_res.page_count} pages, "
-            f"{len(db_chunks)} chunks, OCR={extraction_res.ocr_applied}"
+            f"{len(db_chunks)} chunks, OCR={extraction_res.ocr_applied}, indexed={indexed_in_vector_store}"
         )
 
         return DocumentUploadResponse(
@@ -188,6 +211,8 @@ async def upload_document(
             page_count=extraction_res.page_count,
             ocr_applied=extraction_res.ocr_applied,
             total_chunks=len(db_chunks),
+            indexed_in_vector_store=indexed_in_vector_store,
+            indexing_error=indexing_error,
             chunks=[DocumentChunkResponse.model_validate(c) for c in db_chunks],
         )
 
@@ -252,4 +277,93 @@ def get_claim_chunks(claim_id: int, db: Session = Depends(get_db)) -> DocumentCh
         claim_id=claim_id,
         total_chunks=len(chunks),
         chunks=[DocumentChunkResponse.model_validate(c) for c in chunks],
+    )
+
+
+@router.post(
+    "/search",
+    response_model=DocumentSearchResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Semantic document chunk search with metadata filters",
+)
+def search_documents(
+    search_req: DocumentSearchRequest,
+    db: Session = Depends(get_db),
+    vector_store: VectorStore = Depends(get_vector_store_dep),
+) -> DocumentSearchResponse:
+    """Semantic vector search across document chunks with optional policy_id, claim_id, and document_type filters."""
+    query_clean = search_req.query.strip()
+    if not query_clean:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Search query cannot be empty or whitespace only.",
+        )
+
+    # Validate policy and claim existence if filters are provided
+    if search_req.policy_id is not None:
+        policy = crud_get_policy(db, policy_id=search_req.policy_id)
+        if not policy:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Policy with ID {search_req.policy_id} not found.",
+            )
+
+    if search_req.claim_id is not None:
+        claim = crud_get_claim(db, claim_id=search_req.claim_id)
+        if not claim:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Claim with ID {search_req.claim_id} not found.",
+            )
+
+    # Construct metadata filters
+    filter_conditions = []
+    if search_req.policy_id is not None:
+        filter_conditions.append({"policy_id": int(search_req.policy_id)})
+    if search_req.claim_id is not None:
+        filter_conditions.append({"claim_id": int(search_req.claim_id)})
+    if search_req.document_type is not None and search_req.document_type.strip():
+        filter_conditions.append({"document_type": search_req.document_type.strip()})
+
+    where_filter = None
+    if len(filter_conditions) == 1:
+        where_filter = filter_conditions[0]
+    elif len(filter_conditions) > 1:
+        where_filter = {"$and": filter_conditions}
+
+    try:
+        raw_results = vector_store.query_similar(
+            query_text=query_clean,
+            top_k=search_req.top_k,
+            where=where_filter,
+        )
+    except Exception as e:
+        logger.error(f"Vector search failed for query: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while executing vector search.",
+        )
+
+    items = [
+        DocumentSearchResultItem(
+            chunk_id=r.chunk_id,
+            document_id=r.document_id,
+            text=r.text,
+            policy_id=r.policy_id,
+            claim_id=r.claim_id,
+            document_type=r.document_type,
+            clause_or_section_ref=r.clause_or_section_ref,
+            page_number=r.page_number,
+            chunk_index=r.chunk_index,
+            similarity_score=r.similarity_score,
+            distance=r.distance,
+            metadata=r.metadata,
+        )
+        for r in raw_results
+    ]
+
+    return DocumentSearchResponse(
+        query=query_clean,
+        total_results=len(items),
+        results=items,
     )

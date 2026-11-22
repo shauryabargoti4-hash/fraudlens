@@ -48,6 +48,7 @@ def seed_database_and_ingest():
                 premium_amount=2400.0,
                 max_coverage_limit=500000.0,
                 status=PolicyStatus.ACTIVE,
+                document_path="sample_data/policies/apex_shield_policy.pdf",
             )
             db.add(policy)
             db.flush()
@@ -155,10 +156,11 @@ def seed_database_and_ingest():
 
             claim_doc_id = None
             if is_claim_doc:
+                rel_file_path = file_path.relative_to(base_dir.parent).as_posix()
                 claim_doc = ClaimDocument(
                     claim_id=claim.id,
                     filename=filename,
-                    file_path=str(file_path),
+                    file_path=rel_file_path,
                     file_hash="mock_hash_" + filename,
                     document_type=doc_type,
                     page_count=extraction.page_count,

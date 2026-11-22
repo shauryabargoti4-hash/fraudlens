@@ -1,0 +1,110 @@
+RESIDENTIAL LEASE AGREEMENT
+================================================================================
+NOTICE: THIS DOCUMENT HAS BEEN REDACTED FOR PRIVACY AND COMPLIANCE.
+ALL PERSONALLY IDENTIFIABLE INFORMATION (PII) HAS BEEN EXPUNGED.
+================================================================================
+
+THIS LEASE AGREEMENT (hereinafter referred to as the "Agreement") is executed on
+this 1st day of January 2026, by and between:
+
+LESSOR (LANDLORD):
+Name: [REDACTED - LESSOR NAME]
+Identity Proof: PAN [REDACTED - LESSOR PAN] / Aadhaar [REDACTED - LESSOR AADHAAR]
+Address: [REDACTED - RESIDENTIAL ADDRESS]
+Contact: [REDACTED - PHONE NUMBER], [REDACTED - EMAIL]
+(hereinafter referred to as the "Lessor", which expression shall include heirs and assigns)
+
+AND
+
+LESSEE (TENANT):
+Name: [REDACTED - LESSEE NAME]
+Identity Proof: PAN [REDACTED - LESSEE PAN] / Aadhaar [REDACTED - LESSEE AADHAAR]
+Address: [REDACTED - PERMANENT ADDRESS]
+Contact: [REDACTED - PHONE NUMBER], [REDACTED - EMAIL]
+(hereinafter referred to as the "Lessee", which expression shall include heirs and assigns)
+
+WHEREAS the Lessor is the absolute owner of the residential property situated at:
+Flat No. [REDACTED - UNIT NUMBER], Tower [REDACTED],
+Skyline Meadows Residential Enclave, Sector [REDACTED], Metro City - 400001
+(hereinafter referred to as the "Demised Premises").
+
+NOW THIS AGREEMENT WITNESSETH AS FOLLOWS:
+
+1. TERM OF LEASE AND LOCK-IN PERIOD
+1.1 The lease is granted for an initial fixed term of 11 (eleven) months commencing
+from January 1, 2026 and expiring on November 30, 2026.
+1.2 Both parties agree to a mandatory Lock-in Period of 6 (six) months from the
+Commencement Date. Neither party shall terminate this Agreement during the lock-in period.
+If the Lessee vacates prior to the expiry of the lock-in period, the Lessee shall forfeit
+the entire security deposit.
+
+2. MONTHLY RENT AND PAYMENT TERMS
+2.1 The Lessee agrees to pay a monthly rent of $2,200.00 (Two Thousand Two Hundred Dollars)
+payable in advance on or before the 5th calendar day of each operating month.
+2.2 Payment shall be deposited electronically into designated Bank Account:
+Bank: [REDACTED - BANK NAME]
+Account Number: [REDACTED - ACCOUNT NUMBER]
+IFSC/SWIFT: [REDACTED - ROUTING CODE]
+2.3 Any delayed remittance beyond the 5th of the month shall attract a late interest charge
+of 2.0% per month on the overdue amount.
+
+3. INTEREST-FREE REFUNDABLE SECURITY DEPOSIT
+3.1 Upon execution of this Agreement, the Lessee has deposited an Interest-Free
+Refundable Security Deposit of $6,600.00 (Six Thousand Six Hundred Dollars), equivalent
+to 3 (three) months' rent.
+3.2 The Security Deposit shall be refunded by the Lessor to the Lessee within 15 (fifteen)
+calendar days of the Lessee peacefully handing over vacant physical possession of the Demised
+Premises, subject to legitimate deductions for unpaid utility dues or verified structural damage.
+
+4. MAINTENANCE, REPAIRS, AND UTILITY CHARGES
+4.1 The Lessee shall bear and promptly pay monthly society maintenance dues of $150.00,
+water consumption charges, and electricity charges as per actual meter readings.
+4.2 Routine day-to-day minor repairs (up to $50.00 per incident) such as bulb replacements,
+tap washers, and minor plumbing shall be borne by the Lessee.
+4.3 Major structural repairs, seepage remediation, and primary plumbing/electrical failure
+not attributable to Lessee negligence shall be the responsibility of the Lessor.
+
+5. RESTRICTIONS ON USE AND SUBLETTING PROHIBITION
+5.1 The Demised Premises shall be utilized exclusively for private residential dwelling purposes
+and for no other commercial, industrial, or unlawful activity.
+5.2 The Lessee shall strictly not assign, transfer, license, or sublet the Demised Premises
+or any part thereof to any third party under any circumstances. Any breach of this clause
+shall constitute an incurable default entitling the Lessor to immediate eviction.
+5.3 Hazardous materials, firearms, and illegal substances are strictly prohibited on the premises.
+
+6. INSPECTION AND RIGHT OF ENTRY
+6.1 The Lessor or their authorized representative reserves the right to inspect the Demised
+Premises upon giving at least 24 (twenty-four) hours prior written or electronic notice,
+during reasonable daytime hours (10:00 AM to 6:00 PM).
+
+7. TERMINATION AND NOTICE PERIOD
+7.1 Post the completion of the 6-month Lock-in Period, either party may terminate this Agreement
+by serving 1 (one) month advance written notice to the other party.
+7.2 Failure by the Lessee to pay rent for two consecutive months shall entitle the Lessor
+to immediately terminate this Agreement and re-enter the premises.
+
+8. VACATING AND RESTORATION
+8.1 Upon termination or expiry, the Lessee shall surrender the Demised Premises in the same
+sound clean state and order as received, reasonable wear and tear excepted.
+8.2 Deep cleaning costs and repainting charges (capped at $350.00) may be deducted from
+the Security Deposit if the premises are handed over with marked walls or damage.
+
+9. GOVERNING LAW AND DISPUTE RESOLUTION
+9.1 This Agreement shall be governed by and construed in accordance with the laws of the State.
+9.2 Any dispute arising hereunder shall be referred to a sole arbitrator appointed mutually
+by both parties, with the seat of arbitration situated at Metro City.
+
+IN WITNESS WHEREOF, the Lessor and Lessee have signed this Agreement on the date first above written.
+
+LESSOR:
+[REDACTED - LESSOR SIGNATURE]
+[REDACTED - LESSOR NAME]
+
+LESSEE:
+[REDACTED - LESSEE SIGNATURE]
+[REDACTED - LESSEE NAME]
+
+WITNESSES:
+1. [REDACTED - WITNESS 1 NAME & SIGNATURE]
+2. [REDACTED - WITNESS 2 NAME & SIGNATURE]
+================================================================================
