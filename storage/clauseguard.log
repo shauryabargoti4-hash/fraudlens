@@ -3953,3 +3953,23 @@
 2026-11-23 00:40:22 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
 2026-11-23 00:40:22 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
 2026-11-23 00:40:22 | INFO     | clauseguard:lifespan:23 - Shutting down ClauseGuard...
+2026-11-23 00:40:25 | INFO     | clauseguard:lifespan:18 - Starting ClauseGuard v0.1.0 [Env: development]
+2026-11-23 00:40:25 | INFO     | clauseguard:init_db:59 - Initializing ClauseGuard database tables...
+2026-11-23 00:40:25 | INFO     | clauseguard:init_db:64 - Database tables initialized successfully.
+2026-11-23 00:40:25 | INFO     | clauseguard:lifespan:21 - Application initialization complete. Ready to receive requests.
+2026-11-23 00:45:39 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 33 chunks into ChromaDB 'clauseguard_policies'
+2026-11-23 00:45:39 | INFO     | clauseguard:upload_document:189 - Successfully auto-indexed 33 chunks for 'sample_redacted_rent_agreement.txt' into ChromaDB
+2026-11-23 00:45:39 | INFO     | clauseguard:upload_document:197 - Successfully ingested 'sample_redacted_rent_agreement.txt': 1 pages, 33 chunks, OCR=False, indexed=True
+2026-11-23 00:49:10 | INFO     | clauseguard:upsert_chunks:114 - Successfully upserted 33 chunks into ChromaDB 'clauseguard_policies'
+2026-11-23 00:49:10 | INFO     | clauseguard:upload_document:189 - Successfully auto-indexed 33 chunks for 'sample_redacted_rent_agreement.txt' into ChromaDB
+2026-11-23 00:49:10 | INFO     | clauseguard:upload_document:197 - Successfully ingested 'sample_redacted_rent_agreement.txt': 1 pages, 33 chunks, OCR=False, indexed=True
+2026-11-23 00:50:13 | INFO     | clauseguard:retrieval_node:43 - [Workflow Node: 1] Retrieving evidence for Claim 1
+2026-11-23 00:50:14 | INFO     | clauseguard:retrieve_claim_evidence:114 - Evidence package retrieved for Claim 1: 93 policy clauses, 8 invoice items, 7 form items, 5 supporting items.
+2026-11-23 00:50:14 | INFO     | clauseguard:rule_extractor_node:58 - [Workflow Node: 2] Extracting policy rules for Claim 1
+2026-11-23 00:50:14 | INFO     | clauseguard:reviewer_node:85 - [Workflow Node: 3] Reviewer evaluating clause applicability for Claim 1
+2026-11-23 00:50:14 | INFO     | clauseguard:review_rules:86 - Reviewer completed for Claim 1: 87 approved, 6 rejected, 0 uncertain, 0 needs more evidence.
+2026-11-23 00:50:14 | INFO     | clauseguard:analyzer_calculator_node:103 - [Workflow Node: 4] Analyzer & Calculator executing for Claim 1
+2026-11-23 00:50:14 | INFO     | clauseguard:analyze_and_calculate:99 - Analyzer/Calculator finished for Claim 1: 4 fraud signals, 1 loopholes, eligible=$5,470.00
+2026-11-23 00:50:14 | INFO     | clauseguard:recommendation_gate_node:126 - [Workflow Node: 5] Deterministic Recommendation Gate for Claim 1
+2026-11-23 00:50:14 | INFO     | clauseguard:report_persistence_node:149 - [Workflow Node: 6] Persisting Audit Report for Claim 1
+2026-11-23 00:50:14 | INFO     | clauseguard:persist_report:180 - Successfully persisted AnalysisReport ID=12 for Claim 1 with verdict DO_NOT_TAKE.
